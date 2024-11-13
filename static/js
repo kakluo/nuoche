@@ -1,0 +1,245 @@
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
+
+async function handleRequest(request) {
+  const phone = '15691055826'
+  const wxpusherAppToken = 'AT_ecHYmt35O90WGtA6KyfrG2RJ8MaMdl5d'
+  const wxpusherUIDs = ['UID_b0HSsPHcP7rVmLt3tm6ZCtodpebA']
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>通知车主挪车</title>
+        <style>
+          * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+          }
+          :root {
+            --primary-color: #4776E6;
+            --secondary-color: #8E54E9;
+            --text-color: #2c3e50;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --button-height: 50px;
+          }
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-color);
+            padding: 20px;
+          }
+          .container {
+            text-align: center;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px var(--shadow-color);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: relative;
+          }
+          .car-icon {
+            font-size: 64px;
+            margin-bottom: 25px;
+            display: inline-block;
+          }
+          h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+          }
+          p {
+            margin-bottom: 30px;
+            font-size: 18px;
+            color: #546e7a;
+            line-height: 1.8;
+          }
+          .textarea-container {
+            margin-bottom: 20px;
+          }
+          textarea {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            resize: none;
+            box-sizing: border-box;
+            height: 80px;
+          }
+          .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 25px;
+          }
+          .button-group button {
+            flex: 1 1 45%;
+            height: var(--button-height);
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+          }
+          .option-btn {
+            background-color: #546e7a;
+          }
+          .option-btn:hover {
+            background-color: #455a64;
+          }
+          .notify-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 15px rgba(71, 118, 230, 0.2);
+          }
+          .notify-btn:hover {
+            box-shadow: 0 6px 20px rgba(71, 118, 230, 0.3);
+            transform: translateY(-2px);
+          }
+          .call-btn {
+            background: linear-gradient(45deg, #00b09b, #96c93d);
+            box-shadow: 0 4px 15px rgba(0, 176, 155, 0.2);
+          }
+          .call-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 176, 155, 0.3);
+            transform: translateY(-2px);
+          }
+          button:active {
+            transform: scale(0.98);
+          }
+          .loading::after {
+            content: "";
+            position: absolute;
+            right: 20px;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+          }
+          @keyframes spin {
+            to {
+              transform: rotate(360deg);
+            }
+          }
+          .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+          }
+          .toast.show {
+            opacity: 1;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="car-icon">🚗</div>
+          <h1>温馨提示</h1>
+          <p>不好意思阻碍到您的出行了<br>请通过以下方式联系我，我会立即前来挪车</p>
+          <div class="textarea-container">
+            <textarea id="message" maxlength="200">车主，您爱车的车窗未关，请及时处理一下哦。</textarea>
+          </div>
+          <div class="button-group">
+            <button class="option-btn" onclick="setMessage('车主，您爱车的车窗未关，请及时处理一下哦。')">未关窗</button>
+            <button class="option-btn" onclick="setMessage('车主，您爱车的车灯未关，请及时处理一下哦。')">未关灯</button>
+            <button class="option-btn" onclick="setMessage('车主，交警提醒您挪车，请及时处理。')">交警</button>
+            <button class="option-btn" onclick="setMessage('车主，您爱车的位置需要调整，请尽快挪车。')">挪车</button>
+          </div>
+          <div class="button-group">
+            <button class="notify-btn" onclick="notifyOwner()">微信通知 📱</button>
+            <button class="call-btn" onclick="callOwner()">电话联系 📞</button>
+          </div>
+        </div>
+        <div id="toast" class="toast"></div>
+
+        <script>
+          function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+              toast.classList.remove('show');
+            }, duration);
+          }
+
+          function setMessage(message) {
+            document.getElementById('message').value = message;
+          }
+
+          function notifyOwner() {
+            const button = document.querySelector('.notify-btn');
+            button.classList.add('loading');
+            button.disabled = true;
+            const message = document.getElementById('message').value;
+
+            fetch("https://wxpusher.zjiecode.com/api/send/message", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                appToken: "${wxpusherAppToken}",
+                content: message,
+                contentType: 1,
+                uids: ${JSON.stringify(wxpusherUIDs)}
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              button.classList.remove('loading');
+              button.disabled = false;
+              if (data.code === 1000) {
+                showToast("通知已发送，车主很快就来！");
+              } else {
+                showToast("发送失败，请尝试电话联系");
+              }
+            })
+            .catch(error => {
+              console.error("Error:", error);
+              button.classList.remove('loading');
+              button.disabled = false;
+              showToast("网络错误，请尝试电话联系");
+            });
+          }
+
+          function callOwner() {
+            window.location.href = "tel:${phone}";
+          }
+        </script>
+      </body>
+    </html>
+  `
+
+  return new Response(htmlContent, {
+    headers: { 'Content-Type': 'text/html;charset=UTF-8' },
+  })
+}
