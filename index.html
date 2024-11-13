@@ -1,22 +1,32 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的简单网站</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>通知车主挪车</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="container">
+    <div class="car-icon">🚗</div>
+    <h1>温馨提示</h1>
+    <p>不好意思阻碍到您的出行了<br>请通过以下方式联系我，我会立即前来挪车</p>
+    <div class="textarea-container">
+      <textarea id="message" maxlength="200">车主，您爱车的车窗未关，请及时处理一下哦。</textarea>
+    </div>
+    <div class="button-group">
+      <button class="option-btn" onclick="setMessage('车主，您爱车的车窗未关，请及时处理一下哦。')">未关窗</button>
+      <button class="option-btn" onclick="setMessage('车主，您爱车的车灯未关，请及时处理一下哦。')">未关灯</button>
+      <button class="option-btn" onclick="setMessage('车主，交警提醒您挪车，请及时处理。')">交警</button>
+      <button class="option-btn" onclick="setMessage('车主，您爱车的位置需要调整，请尽快挪车。')">挪车</button>
+    </div>
+    <div class="button-group">
+      <button class="notify-btn" onclick="notifyOwner()">微信通知 📱</button>
+      <button class="call-btn" onclick="callOwner()">电话联系 📞</button>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
 
-    <h1>欢迎访问我的网站</h1>
-    <p>这是一个简单的示例，展示如何通过 GitHub 引入 JS 文件。</p>
-
-    <!-- 引入外部 JS 文件（GitHub raw 文件链接） -->
-    <script src="/static/script.js"></script>
-
-    <script>
-        // 或者你也可以直接在页面内写一些 JavaScript
-        console.log('页面加载完成！');
-    </script>
-
+  <script src="js/script.js"></script>
 </body>
 </html>
