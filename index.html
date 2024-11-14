@@ -32,11 +32,28 @@
 
   <script src="/static/js/script.js"></script>
 
-</div>
-<script src="https://cdn.jsdelivr.net/gh/niceao/Alist@main/js/lib.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/niceao/Alist@main/js/parallax.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/niceao/Alist@main/js/app.bundle.js"></script>
-<div id="jsi-flying-fish-container" class="fish-container"></div>
-<script src='https://cdn.jsdelivr.net/gh/niceao/Alist@main/fish.js'></script>
+  <!-- 页脚由 JavaScript 动态加载 -->
+  <script>
+    // JavaScript 动态添加页脚
+    window.onload = function() {
+      // 创建页脚元素
+      const footer = document.createElement('footer');
+      footer.innerHTML = `
+        <p>养鱼 · 2024 | 关注 <a href="https://cdn.jsdelivr.net/gh/niceao/Alist@main/fish.js" target="_blank">我的鱼缸</a></p>
+      `;
+      
+      // 添加到 body 的末尾
+      document.body.appendChild(footer);
+
+      // 可选：设置页脚的样式（如果需要的话）
+      footer.style.textAlign = 'center';
+      footer.style.fontSize = '14px';
+      footer.style.color = '#888';
+      footer.style.marginTop = '40px';
+      footer.style.padding = '20px';
+      footer.style.backgroundColor = '#f8f8f8';
+      footer.style.borderTop = '1px solid #e0e0e0';
+    };
+  </script>
 </body>
 </html>
